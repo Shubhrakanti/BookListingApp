@@ -8,14 +8,9 @@ public class Book {
 
     private String title;
     private String[] authors;
-    private String publishDate;
-    private String subtitle;
-
-    public Book(String title, String[] authors, String publishDate, String subtitle) {
+    public Book(String title, String[] authors) {
         this.title = title;
         this.authors = authors;
-        this.publishDate = publishDate;
-        this.subtitle = subtitle;
     }
 
     public String getTitle() {
@@ -26,11 +21,4 @@ public class Book {
         return authors;
     }
 
-    public String getPublishDate() {
-        return publishDate;
-    }
-
-    public String getSubtitle() {
-        return subtitle;
-    }
 }

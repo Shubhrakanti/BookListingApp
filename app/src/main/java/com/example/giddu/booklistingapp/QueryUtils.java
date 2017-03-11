@@ -33,6 +33,8 @@ public final class QueryUtils {
 
         try {
 
+            Log.d("QueryUtils", JSON_response);
+
             JSONObject root = new JSONObject(JSON_response);
             JSONArray bookList = root.getJSONArray("items");
             for (int i= 0; i < bookList.length(); i++){
@@ -40,15 +42,14 @@ public final class QueryUtils {
 
                 JSONObject volumeInfo = currentBook.getJSONObject("volumeInfo");
                 String title = volumeInfo.getString("title");
-                String subtitle = volumeInfo.getString("subtitle");
+
                 JSONArray JSON_authors = volumeInfo.getJSONArray("authors");
                 String [] authors = new String[JSON_authors.length()];
                 for (int x = 0; x<authors.length; x++){
                     authors[x] = JSON_authors.getString(x);
                 }
-                String publishDate = currentBook.getString("publishedDate");
 
-                books.add(new Book(title, authors, publishDate, subtitle));
+                books.add(new Book(title, authors));
 
             }
 

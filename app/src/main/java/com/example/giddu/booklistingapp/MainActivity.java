@@ -37,13 +37,6 @@ public class MainActivity extends AppCompatActivity implements android.app.Loade
         searchLayout = (LinearLayout) findViewById(R.id.search_layout);
 
 
-        addOn = "quilting";
-
-        finalURL = base_URL+addOn;
-
-        Log.d(LOG_TAG, "OnCreate");
-
-        getLoaderManager().initLoader(THIS_LOADER_ID, null, this);
 
 
 
@@ -51,18 +44,15 @@ public class MainActivity extends AppCompatActivity implements android.app.Loade
 
     public void searchClicked(View v){
 
-        addOn = searchText.getText().toString();
-
-
-
-
+        addOn = searchText.getText().toString() + "&maxResults=25";
+        finalURL = base_URL+addOn;
+        getLoaderManager().initLoader(THIS_LOADER_ID, null, this);
 
     }
 
     @Override
     public android.content.Loader<ArrayList<Book>> onCreateLoader(int id, Bundle args) {
 
-        Log.d(LOG_TAG, "OnCreateLoader");
         return new BookLoader(this, finalURL);
 
     }
@@ -72,8 +62,6 @@ public class MainActivity extends AppCompatActivity implements android.app.Loade
 
         bookAdapter = new BookAdapter(this, data);
         bookListView.setAdapter(bookAdapter);
-
-        Log.d(LOG_TAG, "OnFinishLoader");
 
         searchLayout.setVisibility(View.GONE);
 

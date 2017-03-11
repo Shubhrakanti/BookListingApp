@@ -33,23 +33,21 @@ public class BookAdapter extends ArrayAdapter<Book> {
 
         Book current = getItem(position);
 
-        TextView title = (TextView) convertView.findViewById(R.id.title);
+        TextView title = (TextView) listItemView.findViewById(R.id.title_text);
         title.setText(current.getTitle());
-
-        TextView subtitle = (TextView) convertView.findViewById(R.id.subtitle);
-        subtitle.setText(current.getSubtitle());
-
-        TextView pubDate = (TextView) convertView.findViewById(R.id.date);
-        pubDate.setText(current.getPublishDate());
 
         String [] authors = current.getAuthors();
         StringBuffer appendAuthors = new StringBuffer("");
 
         for (int i = 0; i < authors.length; i++){
+            if(i!=0){
+                appendAuthors.append(", ");
+            }
+
             appendAuthors.append(authors[i]);
         }
 
-        TextView authorTextView = (TextView) convertView.findViewById(R.id.authors);
+        TextView authorTextView = (TextView) listItemView.findViewById(R.id.authors);
         authorTextView.setText(appendAuthors);
 
         return listItemView;
