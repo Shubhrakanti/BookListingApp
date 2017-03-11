@@ -22,6 +22,7 @@
         android:layout_weight="1"
         tools:text="authors: author 1 author 2"
         android:textAlignment="center"
+        android:scrollbars="horizontal"
         />
 
 

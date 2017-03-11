@@ -1,5 +1,8 @@
 package com.example.giddu.booklistingapp;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -9,8 +12,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 
 public class MainActivity extends AppCompatActivity implements android.app.LoaderManager.LoaderCallbacks<ArrayList<Book>> {
@@ -24,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements android.app.Loade
     private static final String LOG_TAG = "Main Activity";
     private String addOn;
     private String finalURL = "";
-
+    private boolean isConnected;
 
 
     @Override
@@ -36,25 +42,43 @@ public class MainActivity extends AppCompatActivity implements android.app.Loade
         bookListView = (ListView) findViewById(R.id.list);
         searchLayout = (LinearLayout) findViewById(R.id.search_layout);
 
+        ConnectivityManager cm =
+                (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        if (!isConnected) {
+            Toast.makeText(this, "No interent connection", Toast.LENGTH_SHORT).show();
 
+        }
 
 
     }
 
-    public void searchClicked(View v){
+    public void searchClicked(View v) {
 
-        addOn = searchText.getText().toString() + "&maxResults=25";
-        finalURL = base_URL+addOn;
-        getLoaderManager().initLoader(THIS_LOADER_ID, null, this);
+        ConnectivityManager cm =
+                (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        if (isConnected) {
+            addOn = searchText.getText().toString() + "&maxResults=25";
+            finalURL = base_URL + addOn;
+            getLoaderManager().initLoader(THIS_LOADER_ID, null, this);
+            bookListView.setEmptyView((findViewById(R.id.no_Result)));
+
+        } else Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public android.content.Loader<ArrayList<Book>> onCreateLoader(int id, Bundle args) {
 
         return new BookLoader(this, finalURL);
-
     }
 
     @Override
@@ -64,10 +88,9 @@ public class MainActivity extends AppCompatActivity implements android.app.Loade
         bookListView.setAdapter(bookAdapter);
 
         searchLayout.setVisibility(View.GONE);
-
         bookListView.setVisibility(View.VISIBLE);
 
-
+        Log.d(LOG_TAG, "ONfinished");
 
     }
 
@@ -76,8 +99,6 @@ public class MainActivity extends AppCompatActivity implements android.app.Loade
         android.app.LoaderManager loaderManager = getLoaderManager();
 
         loaderManager.initLoader(THIS_LOADER_ID, null, this);
-
-
 
     }
 

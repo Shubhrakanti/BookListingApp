@@ -8,6 +8,7 @@ public class Book {
 
     private String title;
     private String[] authors;
+
     public Book(String title, String[] authors) {
         this.title = title;
         this.authors = authors;

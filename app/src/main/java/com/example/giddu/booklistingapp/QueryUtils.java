@@ -25,28 +25,30 @@ public final class QueryUtils {
     private QueryUtils() {
     }
 
-    public static ArrayList<Book> fetchData (String JSON_response){
+    public static ArrayList<Book> fetchData(String JSON_response) {
 
         ArrayList<Book> books = new ArrayList<Book>();
-        Log.d("BookLoader", "null URL");
-
 
         try {
-
-            Log.d("QueryUtils", JSON_response);
-
             JSONObject root = new JSONObject(JSON_response);
             JSONArray bookList = root.getJSONArray("items");
-            for (int i= 0; i < bookList.length(); i++){
+            for (int i = 0; i < bookList.length(); i++) {
                 JSONObject currentBook = bookList.getJSONObject(i);
 
                 JSONObject volumeInfo = currentBook.getJSONObject("volumeInfo");
                 String title = volumeInfo.getString("title");
 
-                JSONArray JSON_authors = volumeInfo.getJSONArray("authors");
-                String [] authors = new String[JSON_authors.length()];
-                for (int x = 0; x<authors.length; x++){
-                    authors[x] = JSON_authors.getString(x);
+                String[] authors;
+
+                if (volumeInfo.has("authors")) {
+                    JSONArray JSON_authors = volumeInfo.getJSONArray("authors");
+                    authors = new String[JSON_authors.length()];
+                    for (int x = 0; x < authors.length; x++) {
+                        authors[x] = JSON_authors.getString(x);
+                    }
+                } else {
+                    authors = new String[1];
+                    authors[0] = "No authors's available";
                 }
 
                 books.add(new Book(title, authors));
@@ -62,7 +64,7 @@ public final class QueryUtils {
     }
 
     public static String makeHttpRequest(URL url) throws IOException {
-        String jsonResponse ="";
+        String jsonResponse = "";
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;
         try {
@@ -74,7 +76,7 @@ public final class QueryUtils {
 
             int responseCoode = urlConnection.getResponseCode();
 
-            if(responseCoode==200){
+            if (responseCoode == 200) {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
             }
