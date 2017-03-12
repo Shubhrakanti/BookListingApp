@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements android.app.Loade
     LinearLayout searchLayout;
     BookAdapter bookAdapter;
     private static final int THIS_LOADER_ID = 1;
-    private static final String base_URL = "https://www.googleapis.com/books/v1/volumes?q=";
+    private static final String base_URL = "https://www.googleapis.com/books/v1/volumes?q=quilting";
     private static final String LOG_TAG = "Main Activity";
     private String addOn;
     private String finalURL = "";
@@ -51,7 +51,13 @@ public class MainActivity extends AppCompatActivity implements android.app.Loade
         if (!isConnected) {
             Toast.makeText(this, "No interent connection", Toast.LENGTH_SHORT).show();
 
+
+
+        } else{
+            getLoaderManager().initLoader(THIS_LOADER_ID, null, this);
+            bookListView.setEmptyView((findViewById(R.id.no_Result)));
         }
+
 
 
     }
@@ -78,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements android.app.Loade
     @Override
     public android.content.Loader<ArrayList<Book>> onCreateLoader(int id, Bundle args) {
 
-        return new BookLoader(this, finalURL);
+        return new BookLoader(this, base_URL);
     }
 
     @Override
@@ -87,18 +93,13 @@ public class MainActivity extends AppCompatActivity implements android.app.Loade
         bookAdapter = new BookAdapter(this, data);
         bookListView.setAdapter(bookAdapter);
 
-        searchLayout.setVisibility(View.GONE);
-        bookListView.setVisibility(View.VISIBLE);
-
         Log.d(LOG_TAG, "ONfinished");
 
     }
 
     @Override
     public void onLoaderReset(android.content.Loader<ArrayList<Book>> loader) {
-        android.app.LoaderManager loaderManager = getLoaderManager();
-
-        loaderManager.initLoader(THIS_LOADER_ID, null, this);
+        bookAdapter.clear();
 
     }
 
